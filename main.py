@@ -67,7 +67,7 @@ def callback_handler(call):
             types.InlineKeboardButton("Как узнать статус моего заказа?", callback_data="status"),
             types.InlineKeyyboardButton("Как связаться с вашей технической поддержкой?", callback_data="support"),
             types.InlineKeyboardButton("Как узнать информацию о доставке?", callback_data="delivery"),
-            types.InlineKeyboardButton("Другое", callback_data="other"),
+            types.InlineKeyboardButton("Другое", callback_data="other")
         )
 
         bot.send_message(call.message.chat.id,"📚 Выберите вопрос:",reply_markup=markup)
