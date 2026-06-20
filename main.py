@@ -79,6 +79,9 @@ def callback_handler(call):
     elif call.data in faq_answers:
         bot.send_message(call.message.chat.id, faq_answers[call.data])
 
+    else:
+        bot.send_message(call.message.chat.id, "Данное действие недоступно.")
+
 
 print("Bot started...")
 bot.infinity_polling()
