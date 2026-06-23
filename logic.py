@@ -42,15 +42,30 @@ cursor.executemany(
 conn.commit()
 conn.close()
 
-def save_question(message, cathegory_id):
+def save_question(message, cathegory_id, bot):
     conn = sqlite3.connect("support_bot.db")
     cursor = conn.cursor()
+
     cursor.execute("""
-        INSERT INTO "Users Questions" (user_id, username, cathegory_id, question)
+        INSERT OR REPLACE INTO "Users Questions" (user_id, username, cathegory_id, question)
         VALUES (?, ?, ?, ?)
     """, (message.from_user.id, message.from_user.username, cathegory_id, message.text))
-    # bot.send_message(call.message.chat.id, "✅ Ваша проблема сохранена. Мы скоро ответим.")
+
     conn.commit()
     conn.close()
+    bot.send_message(message.chat.id, "✅ Ваш вопрос сохранён и отправлен специалисту.")
+
+def save_doubt(message, cathegory_id, bot):
+    conn = sqlite3.connect("support_bot.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT OR REPLACE INTO "Users Questions" (user_id, username, cathegory_id, question)
+        VALUES (?, ?, ?, ?)
+    """, (message.from_user.id, message.from_user.username, cathegory_id, message.text))
+
+    conn.commit()
+    conn.close()
+    bot.send_message(message.chat.id, "✅ Ваш вопрос сохранён и отправлен компании.")
 
 print("support_bot.db created successfully!")
