@@ -2,7 +2,8 @@ import telebot
 import sqlite3
 from config import TOKEN
 from telebot import types
-from logic import DATABASE, save_question
+from logic import DATABASE, save_question, save_doubt
+
 
 bot = telebot.TeleBot(TOKEN)
 db = DATABASE
@@ -48,15 +49,15 @@ def callback_handler(call):
 
     if call.data == "contact":
         bot.send_message(call.message.chat.id, "📞 Опишите ваш вопрос специалисту:")
-        bot.register_next_step_handler(call.message, save_question, "3")
+        bot.register_next_step_handler(call.message, save_question, "3", bot)
 
     elif call.data == "technical":
         bot.send_message(call.message.chat.id, "🛠 Напишите вашу техническую проблему:")
-        bot.register_next_step_handler(call.message, save_question, "2")
+        bot.register_next_step_handler(call.message, save_doubt, "2", bot)
 
     elif call.data == "product":
         bot.send_message(call.message.chat.id, "📦 Опишите проблему с товаром:")
-        bot.register_next_step_handler(call.message, save_question, "1")
+        bot.register_next_step_handler(call.message, save_doubt, "1", bot)
 
     elif call.data == "faq":
         markup = types.InlineKeyboardMarkup(row_width=1)
@@ -64,8 +65,8 @@ def callback_handler(call):
             types.InlineKeyboardButton("Как отменить заказ?", callback_data="delet"),
             types.InlineKeyboardButton("Как оформить заказ?", callback_data="order"),
             types.InlineKeyboardButton("Что делать, если товар пришел поврежденным?", callback_data="damaged"),
-            types.InlineKeboardButton("Как узнать статус моего заказа?", callback_data="status"),
-            types.InlineKeyyboardButton("Как связаться с вашей технической поддержкой?", callback_data="support"),
+            types.InlineKeyboardButton("Как узнать статус моего заказа?", callback_data="status"),
+            types.InlineKeyboardButton("Как связаться с вашей технической поддержкой?", callback_data="support"),
             types.InlineKeyboardButton("Как узнать информацию о доставке?", callback_data="delivery"),
             types.InlineKeyboardButton("Другое", callback_data="other")
         )
@@ -74,13 +75,16 @@ def callback_handler(call):
 
     elif call.data == "other":
         bot.send_message(call.message.chat.id, "Введите ваш вопрос ниже. Он будет отправлен специалисту для рассмотрения.")
-        bot.register_next_step_handler(call.message, save_question, "4")
+        bot.register_next_step_handler(call.message, save_question, "4", bot)
 
     elif call.data in faq_answers:
         bot.send_message(call.message.chat.id, faq_answers[call.data])
 
     else:
         bot.send_message(call.message.chat.id, "Данное действие недоступно.")
+
+
+
 
 
 print("Bot started...")
